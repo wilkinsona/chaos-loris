@@ -18,9 +18,14 @@ package io.pivotal.strepsirrhini.chaosloris.docs;
 
 import io.pivotal.strepsirrhini.chaosloris.web.AbstractControllerTest;
 import org.junit.Rule;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.RestDocumentation;
+import org.springframework.restdocs.hypermedia.LinksSnippet;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.restdocs.payload.ResponseFieldsSnippet;
+import org.springframework.restdocs.request.RequestParametersSnippet;
 import org.springframework.restdocs.snippet.Snippet;
+import org.springframework.restdocs.templates.TemplateFormats;
 import org.springframework.test.web.servlet.setup.ConfigurableMockMvcBuilder;
 
 import java.util.function.Consumer;
@@ -39,25 +44,25 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 
 public abstract class AbstractApiDocumentation extends AbstractControllerTest {
 
-    protected static final Snippet PAGEABLE_LINKS = links(
+    protected static final LinksSnippet PAGEABLE_LINKS = links(
         linkWithRel("first").optional().description("The first page of results"),
         linkWithRel("last").optional().description("The last page of results"),
         linkWithRel("next").optional().description("The next page of results"),
         linkWithRel("prev").optional().description("The previous page of results"));
 
-    protected static final Snippet PAGEABLE_REQUEST_PARAMETERS = requestParameters(
+    protected static final RequestParametersSnippet PAGEABLE_REQUEST_PARAMETERS = requestParameters(
         parameterWithName("page").description("Page to retrieve"),
         parameterWithName("size").description("Size of the page to retrieve"),
         parameterWithName("sort").description("Properties that should be sorted by in the format `property,property(,ASC|DESC)`. Default sort direction is ascending. Use multiple `sort` parameters to switch directions, e.g. `?sort=firstname&sort=lastname,asc`."));
 
-    protected static final Snippet PAGEABLE_RESPONSE_FIELDS = responseFields(
+    protected static final ResponseFieldsSnippet PAGEABLE_RESPONSE_FIELDS = responseFields(
         fieldWithPath("page.number").description("The number of this page of results"),
         fieldWithPath("page.size").description("The size of this page of results"),
         fieldWithPath("page.totalPages").description("The total number of pages of results"),
         fieldWithPath("page.totalElements").description("The total number of results"));
 
     @Rule
-    public final RestDocumentation restDocumentation = new RestDocumentation("target/generated-snippets");
+    public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("target/generated-snippets");
 
     protected RestDocumentationResultHandler document;
 
@@ -70,7 +75,7 @@ public abstract class AbstractApiDocumentation extends AbstractControllerTest {
         mockMvcBuilder
             .apply(documentationConfiguration(this.restDocumentation)
                 .uris().withScheme("https").withHost("chaos-loris").withPort(443).and()
-                .writerResolver(new MarkdownWriterResolver()))
+                .snippets().withTemplateFormat(TemplateFormats.markdown()))
             .alwaysDo(this.document);
     }
 

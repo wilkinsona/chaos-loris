@@ -40,7 +40,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 
 public class EventDocumentation extends AbstractApiDocumentation {
 
@@ -94,22 +93,12 @@ public class EventDocumentation extends AbstractApiDocumentation {
         });
 
         this.document.snippets(
-            requestParameters(
-                parameterWithName("page").description("Page to retrieve"),
-                parameterWithName("size").description("Size of the page to retrieve")),
-            responseFields(
-                fieldWithPath("page.number").description("The number of this page of results"),
-                fieldWithPath("page.size").description("The size of this page of results"),
-                fieldWithPath("page.totalPages").description("The total number of pages of results"),
-                fieldWithPath("page.totalElements").description("The total number of results"),
+        	PAGEABLE_REQUEST_PARAMETERS,
+            PAGEABLE_RESPONSE_FIELDS.and(
                 fieldWithPath("_embedded.events").description("A collection of Events as described in [Read an Event](#read-an-event)"),
                 fieldWithPath("_links").ignored()),
-            links(
-                linkWithRel("self").ignored(),
-                linkWithRel("first").optional().description("The first page of results"),
-                linkWithRel("last").optional().description("The last page of results"),
-                linkWithRel("next").optional().description("The next page of results"),
-                linkWithRel("prev").optional().description("The previous page of results")));
+            PAGEABLE_LINKS.and(
+                linkWithRel("self").ignored()));
 
         this.mockMvc.perform(get("/events" + query).accept(HAL_JSON));
     }

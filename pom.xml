@@ -42,7 +42,7 @@
         <lombok.version>1.16.8</lombok.version>
         <reactor.version>2.5.0.M2</reactor.version>
         <snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
-        <spring-restdocs.version>1.0.1.RELEASE</spring-restdocs.version>
+        <spring-restdocs.version>1.1.0.BUILD-SNAPSHOT</spring-restdocs.version>
     </properties>
 
     <dependencies>
@@ -234,6 +234,14 @@
             <url>http://repo.spring.io/milestone</url>
             <snapshots>
                 <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>http://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
     </repositories>
